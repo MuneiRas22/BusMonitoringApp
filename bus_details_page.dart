@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'pages/payment_page.dart';
+import 'payment_page.dart';
 
 class BusDetailsPage extends StatelessWidget {
   final String fromLocation;
@@ -14,15 +14,6 @@ class BusDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Prices for each stop in Rands
-    final Map<String, double> stopPrices = {
-      'Stop 1': 10.0,
-      'Stop 2': 15.0,
-      'Stop 3': 20.0,
-      'Stop 4': 25.0,
-      'Stop 5': 30.0,
-    };
-
     // Dummy data for bus route stops
     final List<Map<String, String>> stops = [
       {'stop': 'Stop 1', 'time': '08:00 AM'},
@@ -33,24 +24,15 @@ class BusDetailsPage extends StatelessWidget {
     ];
 
     void _endTripAtStop(String stop) {
-      // Check if the stop is in the stopPrices map
-      if (stopPrices.containsKey(stop)) {
-        double price = stopPrices[stop]!;
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PaymentPage(
-              price: price,
-              stopName: stop,
-            ),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentPage(
+            price: 30.0, // This could be dynamically calculated based on the stop
+            stopName: stop,
           ),
-        );
-      } else {
-        // Handle the case where the stop is not found in the price map
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Price for this stop is not available.')),
-        );
-      }
+        ),
+      );
     }
 
     return Scaffold(
@@ -69,12 +51,12 @@ class BusDetailsPage extends StatelessWidget {
               ),
               markers: {
                 Marker(
-                  markerId: const MarkerId('start'),
+                  markerId: MarkerId('start'),
                   position: LatLng(-34.9285, 138.6007), // Example coordinates for "fromLocation"
                   infoWindow: InfoWindow(title: 'From: $fromLocation'),
                 ),
                 Marker(
-                  markerId: const MarkerId('end'),
+                  markerId: MarkerId('end'),
                   position: LatLng(-34.9175, 138.6007), // Example coordinates for "toLocation"
                   infoWindow: InfoWindow(title: 'To: $toLocation'),
                 ),
