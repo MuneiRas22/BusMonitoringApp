@@ -1,10 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:modernlogintute/components/my_button.dart';
+import 'package:hive/hive.dart';
 import 'package:modernlogintute/components/my_textfield.dart';
-import 'package:modernlogintute/components/square_tile.dart';
-import 'package:modernlogintute/pages/register_page.dart';
-import 'package:modernlogintute/pages/location_selection_page.dart';
+import 'location_selection_page.dart';
+import '../register_page.dart';
+import 'User.dart'; // Make sure to import your User model
 
+// Custom MyButton Widget
+class MyButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final String text;
+
+  const MyButton({
+    required this.onTap,
+    required this.text,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.symmetric(horizontal: 25),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// LoginPage Widget
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
@@ -12,13 +50,48 @@ class LoginPage extends StatelessWidget {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // Sign-in method
-  void signUserIn(BuildContext context) {
-    // Navigate to the location selection page after sign-in
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LocationSelectionPage()),
-    );
+  // Sign user in method
+  Future<void> signUserIn(BuildContext context) async {
+    try {
+      // Open the Hive box
+      var box = await Hive.openBox('userBox');
+      var userData = box.get(usernameController.text);
+
+      if (userData != null) {
+        // Check if the entered password matches the one stored in the Hive box
+        if (userData['password'] == passwordController.text) {
+          // Create a User object with the correct password
+          User user = User(
+            username: userData['name'], // Use the stored username (or name)
+            password: userData['password'], // Use the stored password
+          );
+
+          // Navigate to the location selection page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  LocationSelectionPage(user: user), // Pass the User object here
+            ),
+          );
+        } else {
+          // Show an error if the password is incorrect
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Incorrect password')),
+          );
+        }
+      } else {
+        // Show an error if the user is not found
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User not found')),
+        );
+      }
+    } catch (e) {
+      // Show an error if something goes wrong
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
   }
 
   @override
@@ -31,23 +104,10 @@ class LoginPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
-
-                // Logo
-                const Icon(
-                  Icons.directions_bus,
-                  size: 100,
-                ),
-
-                const SizedBox(height: 50),
-
-                // Welcome back message
-                Text(
-                  'Welcome Back!',
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 16,
-                  ),
+                // Welcome text
+                const Text(
+                  'Welcome back!',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 25),
@@ -70,92 +130,27 @@ class LoginPage extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                // Forgot password link
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
+                // Sign in button
+                MyButton(
+                  onTap: () => signUserIn(context),
+                  text: 'Sign In',
                 ),
 
                 const SizedBox(height: 25),
 
-                // Sign-in button
-                MyButton(
-                  onTap: () => signUserIn(context), // Pass context to signUserIn
-                ),
-
-                const SizedBox(height: 50),
-
-                // Or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 50),
-
-                // Social sign-in buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    // Google sign-in button
-                    SquareTile(imagePath: 'lib/images/google.png'),
-
-                    SizedBox(width: 15),
-
-                    // Apple sign-in button
-                    SquareTile(imagePath: 'lib/images/apple.png'),
-
-                    SizedBox(width: 15),
-                  ],
-                ),
-
-                const SizedBox(height: 50),
-
-                // Register link
+                // Register now
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Not a member?',
-                      style: TextStyle(color: Colors.grey[700]),
-                    ),
-                    const SizedBox(width: 4),
+                    const Text('Not a member?'),
+                    const SizedBox(width: 5),
                     GestureDetector(
                       onTap: () {
-                        // Navigate to the register page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => RegisterPage()),
+                          MaterialPageRoute(
+                            builder: (context) => RegisterPage(),
+                          ),
                         );
                       },
                       child: const Text(
@@ -168,7 +163,6 @@ class LoginPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
               ],
             ),
           ),

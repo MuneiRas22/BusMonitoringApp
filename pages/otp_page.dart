@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:modernlogintute/components/my_button.dart';
 import 'package:modernlogintute/components/my_textfield.dart';
 
+import 'login_page.dart';
+
 class OTPPage extends StatelessWidget {
   OTPPage({super.key});
 
@@ -46,6 +48,7 @@ class OTPPage extends StatelessWidget {
                 // verify button
                 MyButton(
                   onTap: () => verifyOTP(context),
+                  text: 'Verify OTP', // Added the text parameter here
                 ),
               ],
             ),

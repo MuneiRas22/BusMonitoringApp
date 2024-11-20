@@ -1,7 +1,21 @@
+// lib/pages/ProfilePage.dart
 import 'package:flutter/material.dart';
+import 'FavoritesPage.dart';
+import 'FollowUsOnPage.dart';
+import 'HelpSupportPage.dart';
+import 'MyTicketsPage.dart';
+import 'OffersPage.dart';
+import 'PaymentHistoryPage.dart';
+import 'ReferLearnPage.dart';
+import 'RewardsPage.dart';
+import 'SettingsPage.dart';
+import 'WalletPage.dart';
+import 'User.dart'; // Importing the User model
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  final User user;  // Accept the user as a parameter
+
+  const ProfilePage({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -12,13 +26,24 @@ class ProfilePage extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          // Display the username at the top
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Hello, ${user.username}',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const Divider(),  // Optional divider
+
+          // Profile options
           ListTile(
             leading: const Icon(Icons.account_circle),
             title: const Text('My Tickets'),
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MyTicketsPage()),
+                MaterialPageRoute(builder: (context) => MyTicketsPage(user: user)),
               );
             },
           ),
@@ -28,7 +53,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const FavoritesPage()),
+                MaterialPageRoute(builder: (context) => FavoritesPage(user: user)),
               );
             },
           ),
@@ -38,7 +63,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
+                MaterialPageRoute(builder: (context) => SettingsPage(user: user)),
               );
             },
           ),
@@ -48,7 +73,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const PaymentHistoryPage()),
+                MaterialPageRoute(builder: (context) => PaymentHistoryPage(user: user)),
               );
             },
           ),
@@ -58,7 +83,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const RewardsPage()),
+                MaterialPageRoute(builder: (context) => RewardsPage(user: user)),
               );
             },
           ),
@@ -68,7 +93,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const OffersPage()),
+                MaterialPageRoute(builder: (context) => OffersPage(user: user)),
               );
             },
           ),
@@ -78,7 +103,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const WalletPage()),
+                MaterialPageRoute(builder: (context) => WalletPage(user: user)),
               );
             },
           ),
@@ -88,7 +113,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ReferLearnPage()),
+                MaterialPageRoute(builder: (context) => ReferLearnPage(user: user)), // Note the lowercase 'user'
               );
             },
           ),
@@ -98,7 +123,7 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const HelpSupportPage()),
+                MaterialPageRoute(builder: (context) => HelpSupportPage(user: user)),
               );
             },
           ),
@@ -115,133 +140,12 @@ class ProfilePage extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const FollowUsOnPage()),
+                MaterialPageRoute(builder: (context) => FollowUsOnPage(user: user)),
               );
             },
           ),
         ],
       ),
-    );
-  }
-}
-
-// Placeholder classes for the different pages. Replace with your actual page implementations.
-class MyTicketsPage extends StatelessWidget {
-  const MyTicketsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('My Tickets')),
-      body: const Center(child: Text('My Tickets Page')),
-    );
-  }
-}
-
-class FavoritesPage extends StatelessWidget {
-  const FavoritesPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Favorites')),
-      body: const Center(child: Text('Favorites Page')),
-    );
-  }
-}
-
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: const Center(child: Text('Settings Page')),
-    );
-  }
-}
-
-class PaymentHistoryPage extends StatelessWidget {
-  const PaymentHistoryPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Payment History')),
-      body: const Center(child: Text('Payment History Page')),
-    );
-  }
-}
-
-class RewardsPage extends StatelessWidget {
-  const RewardsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Rewards')),
-      body: const Center(child: Text('Rewards Page')),
-    );
-  }
-}
-
-class OffersPage extends StatelessWidget {
-  const OffersPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Offers')),
-      body: const Center(child: Text('Offers Page')),
-    );
-  }
-}
-
-class WalletPage extends StatelessWidget {
-  const WalletPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Wallet')),
-      body: const Center(child: Text('Wallet Page')),
-    );
-  }
-}
-
-class ReferLearnPage extends StatelessWidget {
-  const ReferLearnPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Refer & Learn')),
-      body: const Center(child: Text('Refer & Learn Page')),
-    );
-  }
-}
-
-class HelpSupportPage extends StatelessWidget {
-  const HelpSupportPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Help and Support')),
-      body: const Center(child: Text('Help and Support Page')),
-    );
-  }
-}
-
-class FollowUsOnPage extends StatelessWidget {
-  const FollowUsOnPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Follow Us On')),
-      body: const Center(child: Text('Follow Us On Page')),
     );
   }
 }
